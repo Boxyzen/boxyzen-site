@@ -4,128 +4,174 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>BoxyZen - Abonnement</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #FAF3E0;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .form-container {
+            background-color: #FFFFFF;
+            border-radius: 10px;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 90%;
+            max-width: 500px;
+        }
+        h1 {
+            font-size: 1.5em;
+            text-align: center;
+            color: #3E6658;
+        }
+        label {
+            font-size: 1em;
+            color: #3E6658;
+            display: block;
+            margin-bottom: 5px;
+        }
+        input, select, textarea, button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #D9E4DD;
+            border-radius: 5px;
+            font-size: 1em;
+        }
+        button {
+            background-color: #689D71;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #3E6658;
+        }
+        .price-display {
+            text-align: center;
+            font-weight: bold;
+            color: #A7754D;
+        }
+    </style>
 </head>
 <body>
-<!-- Formulaire d'abonnement -->
-<div style="display: flex; justify-content: center; align-items: center; padding: 20px; background-color: #FAF3E0; border-radius: 8px; font-family: Arial, sans-serif;">
-  <form id="subscriptionForm" style="width: 100%; max-width: 600px;">
-    <h2 style="text-align: center; color: #3E6658;">S'abonner à BoxyZen</h2>
+    <div class="form-container">
+        <h1>Abonnement BoxyZen</h1>
+        <form id="subscription-form">
+            <label for="name">Nom complet</label>
+            <input type="text" id="name" name="name" placeholder="Votre nom complet" required>
 
-    <!-- Nom complet -->
-    <label for="name" style="font-weight: bold; color: #3E6658;">Nom complet :</label>
-    <input type="text" id="name" name="name" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #689D71; border-radius: 4px;">
+            <label for="email">Adresse email</label>
+            <input type="email" id="email" name="email" placeholder="Votre adresse email" required>
 
-    <!-- Email -->
-    <label for="email" style="font-weight: bold; color: #3E6658;">Email :</label>
-    <input type="email" id="email" name="email" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #689D71; border-radius: 4px;">
+            <label for="address">Adresse postale</label>
+            <textarea id="address" name="address" placeholder="Votre adresse complète" required></textarea>
 
-    <!-- Adresse postale -->
-    <label for="address" style="font-weight: bold; color: #3E6658;">Adresse postale :</label>
-    <textarea id="address" name="address" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #689D71; border-radius: 4px;"></textarea>
+            <label for="box">Type de box</label>
+            <select id="box" name="box" required>
+                <option value="" disabled selected>Choisir un type</option>
+                <option value="Découverte">Découverte</option>
+                <option value="Essentielle">Essentielle</option>
+                <option value="Prestige">Prestige</option>
+            </select>
 
-    <!-- Abonnement -->
-    <label for="abonnement" style="font-weight: bold; color: #3E6658;">Formule d'abonnement :</label>
-    <select id="abonnement" name="abonnement" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #689D71; border-radius: 4px;" onchange="calculatePrice()">
-      <option value="" disabled selected>Choisir une formule</option>
-      <option value="mensuel">Mensuel</option>
-      <option value="trimestriel">Trimestriel</option>
-      <option value="annuel">Annuel</option>
-    </select>
+            <label for="abonnement">Durée de l'abonnement</label>
+            <select id="abonnement" name="abonnement" required>
+                <option value="" disabled selected>Choisir une durée</option>
+                <option value="1 mois">1 mois</option>
+                <option value="3 mois">3 mois</option>
+                <option value="1 an">1 an</option>
+            </select>
 
-    <!-- Type de box -->
-    <label for="box" style="font-weight: bold; color: #3E6658;">Type de box :</label>
-    <select id="box" name="box" required style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #689D71; border-radius: 4px;" onchange="calculatePrice()">
-      <option value="" disabled selected>Choisir un type de box</option>
-      <option value="decouverte">Découverte</option>
-      <option value="essentielle">Essentielle</option>
-      <option value="prestige">Prestige</option>
-    </select>
+            <label for="comment">Commentaire (facultatif)</label>
+            <textarea id="comment" name="comment" placeholder="Ajoutez un commentaire"></textarea>
 
-    <!-- Commentaire -->
-    <label for="comment" style="font-weight: bold; color: #3E6658;">Commentaire (optionnel) :</label>
-    <textarea id="comment" name="comment" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #689D71; border-radius: 4px;"></textarea>
+            <p class="price-display">Prix total : <span id="price">0</span> €</p>
+            <p class="price-display" id="discount"></p>
 
-    <!-- Paiement attendu -->
-    <p id="price" style="text-align: center; font-weight: bold; color: #3E6658; margin-bottom: 15px;">Paiement attendu : 0 €</p>
-    <p id="discount" style="text-align: center; color: #3E6658; margin-bottom: 15px;"></p>
+            <button type="button" id="subscribe-btn">S'abonner</button>
+        </form>
+    </div>
 
-    <!-- Bouton de soumission -->
-    <button type="button" onclick="sendEmail()" style="width: 100%; padding: 15px; background-color: #689D71; color: white; font-weight: bold; border: none; border-radius: 4px; cursor: pointer;">S'abonner</button>
-  </form>
-</div>
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script>
+        (function() {
+            emailjs.init("gooz1MRMqWrBveQ_N");
+        })();
 
-<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-<script>
-  // Initialiser EmailJS avec ton User ID
-  (function () {
-    emailjs.init("GOOZ1MRMQWRBVEQ_N");
-  })();
+        const prices = {
+            "Découverte": { "1 mois": 20, "3 mois": 50, "1 an": 220 },
+            "Essentielle": { "1 mois": 35, "3 mois": 95, "1 an": 400 },
+            "Prestige": { "1 mois": 45, "3 mois": 125, "1 an": 520 }
+        };
 
-  // Tarifs et réductions
-  const prices = {
-    mensuel: { decouverte: 20, essentielle: 35, prestige: 45 },
-    trimestriel: { decouverte: 50, essentielle: 95, prestige: 125 },
-    annuel: { decouverte: 220, essentielle: 400, prestige: 520 },
-  };
+        const form = document.getElementById("subscription-form");
+        const boxSelect = document.getElementById("box");
+        const abonnementSelect = document.getElementById("abonnement");
+        const priceDisplay = document.getElementById("price");
+        const discountDisplay = document.getElementById("discount");
+        const subscribeBtn = document.getElementById("subscribe-btn");
 
-  const discounts = {
-    trimestriel: { decouverte: 10, essentielle: 10, prestige: 10 }, // Réductions en euros
-    annuel: { decouverte: 20, essentielle: 25, prestige: 40 },
-  };
+        function updatePrice() {
+            const box = boxSelect.value;
+            const abonnement = abonnementSelect.value;
 
-  // Calculer le prix et la réduction
-  function calculatePrice() {
-    const abonnement = document.getElementById("abonnement").value;
-    const box = document.getElementById("box").value;
+            if (box && abonnement) {
+                const price = prices[box][abonnement];
+                const originalPrice = abonnement === "3 mois" ? prices[box]["1 mois"] * 3 :
+                                      abonnement === "1 an" ? prices[box]["1 mois"] * 12 : price;
+                const discount = originalPrice - price;
 
-    if (abonnement && box) {
-      const price = prices[abonnement][box];
-      const discount = discounts[abonnement]?.[box] || 0;
-
-      document.getElementById("price").innerText = `Paiement attendu : ${price} €`;
-      document.getElementById("discount").innerText = discount > 0
-        ? `Réduction appliquée : ${discount} €`
-        : "";
-      return { price, discount };
-    }
-
-    document.getElementById("price").innerText = "Paiement attendu : 0 €";
-    document.getElementById("discount").innerText = "";
-    return { price: 0, discount: 0 };
-  }
-
-  // Envoyer l'email
-  function sendEmail() {
-    const serviceID = "service_6r66q4a";
-    const templateID = "template_b7bode7";
-
-    const { price } = calculatePrice(); // Obtenir le prix calculé
-    const templateParams = {
-      name: document.getElementById("name").value,
-      email: document.getElementById("email").value,
-      address: document.getElementById("address").value,
-      abonnement: document.getElementById("abonnement").value,
-      box: document.getElementById("box").value,
-      comment: document.getElementById("comment").value,
-      price: `${price} €`,
-    };
-
-    emailjs
-      .send(serviceID, templateID, templateParams)
-      .then(
-        (response) => {
-          alert("Merci ! Votre abonnement a été pris en compte.");
-          document.getElementById("subscriptionForm").reset();
-          document.getElementById("price").innerText = "Paiement attendu : 0 €";
-          document.getElementById("discount").innerText = "";
-        },
-        (error) => {
-          alert("Une erreur s'est produite. Veuillez réessayer.");
+                priceDisplay.textContent = price;
+                discountDisplay.textContent = discount > 0 ? `Réduction : -${discount} €` : "";
+            } else {
+                priceDisplay.textContent = "0";
+                discountDisplay.textContent = "";
+            }
         }
-      );
-  }
-</script>
-    <script src="script.js"></script>
+
+        boxSelect.addEventListener("change", updatePrice);
+        abonnementSelect.addEventListener("change", updatePrice);
+
+        subscribeBtn.addEventListener("click", () => {
+            const name = document.getElementById("name").value;
+            const email = document.getElementById("email").value;
+            const address = document.getElementById("address").value;
+            const box = boxSelect.value;
+            const abonnement = abonnementSelect.value;
+            const comment = document.getElementById("comment").value;
+            const price = priceDisplay.textContent;
+
+            if (!name || !email || !address || !box || !abonnement) {
+                alert("Veuillez remplir tous les champs obligatoires.");
+                return;
+            }
+
+            const templateParams = {
+                name,
+                email,
+                address,
+                box,
+                abonnement,
+                comment,
+                price
+            };
+
+            emailjs.send("service_6r66q4a", "template_b7bode7", templateParams)
+                .then(() => {
+                    alert("Merci pour votre abonnement !");
+                    form.reset();
+                    priceDisplay.textContent = "0";
+                    discountDisplay.textContent = "";
+                })
+                .catch(() => {
+                    alert("Une erreur s'est produite. Veuillez réessayer.");
+                });
+        });
+    </script>
 </body>
 </html>
